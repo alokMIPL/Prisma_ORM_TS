@@ -1,23 +1,50 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import routes from './routes/index.js'; // Add this back
+import express from "express";
+import dotenv from "dotenv";
+import { PrismaClient } from "@prisma/client";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+const prisma = new PrismaClient();
 
 app.use(express.json());
 
-// Use your routes
-app.use('/api', routes);
+app.get("/users", async(_, res) => {
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+  // findFirst give first data or value
+  // **** 
+  // const users = await prisma.user.findFirst()
 
-app.listen(PORT, () => {
-  console.log(`✅ Server: http://localhost:3000`);
-  console.log(`👤 User API: http://localhost:3000/api/user`);
-  console.log(`📝 Test: http://localhost:3000/api/test-direct`);
+  // findFirstOrThrow give first data or value and if not then return or THROW - NULL
+  // **** 
+  // const users = await prisma.user.findFirstOrThrow()
+  
+  // findUnique give the unique value which the developer set in user model schema. Like I made email as unique. So we can get the unique value as email.
+  // By default Prisma POSTGRES thake ID as unique and primary key so. we can also get the unique value by ID.
+  // **** 
+  // const users = await prisma.user.findUnique({
+  //   where: {id : 5},
+  // })
+
+  // const users = await prisma.user.findUnique({
+  //   where: {email : "mick@email.com"},
+  // })
+
+  // We don't use unique for those we don't assign with unique.
+
+
+  // Here we use 
+  // const users = 
+
+
+  // findMany give all values
+  // **** 
+  const users = await prisma.user.findMany()
+
+  res.json(users);
+})
+
+app.listen(4000, () => {
+  console.log("Server running on port 4000");
 });
